@@ -1,9 +1,9 @@
 # Base Python image
 FROM python:3.10-slim
 
-# Install Java for PySpark
+# Install Java for PySpark and utilities
 RUN apt-get update && \
-    apt-get install -y default-jre-headless wget curl && \
+    apt-get install -y default-jre-headless wget curl git && \
     rm -rf /var/lib/apt/lists/*
 
 # Set Java environment
@@ -12,16 +12,19 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Set working directory
 WORKDIR /app
-# airflow users delete --username admin
-# airflow users create --username admin --firstname Aamir --lastname ElAmiri --role Admin --email aamir@example.com --password MySecurePassword123
 
+# Copy the app code (Streamlit & notebooks)
 COPY app/ /app/
 
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Expose Streamlit port
-EXPOSE 8501
+# Install Jupyter and common data science packages
+RUN pip install jupyter pandas matplotlib seaborn pymongo
 
-# Run Streamlit
+# Expose Streamlit and Jupyter ports
+EXPOSE 8501 8888
+
+# Default command: run Streamlit (Jupyter command will override in docker-compose)
 CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]

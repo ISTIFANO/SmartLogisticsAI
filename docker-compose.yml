@@ -21,6 +21,8 @@ services:
     ports:
       - "8080:8080"
     command: ["standalone"]
+    depends_on:
+      - mongo
 
   # PySpark + Streamlit
   streamlit:
@@ -35,5 +37,21 @@ services:
       MONGO_URI: mongodb://mongo:27017
       AIRFLOW_URL: http://airflow:8080
 
+  # Jupyter Notebook
+  jupyter:
+    image: jupyter/pyspark-notebook:latest
+    container_name: jupyter_notebook
+    depends_on:
+      - mongo
+    ports:
+      - "8888:8888"
+    volumes:
+      - C:/Users/aamir/Desktop/YC/P/SmartLogisticsAI/app:/home/jovyan/work
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+    command: >
+      jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --notebook-dir=/home/jovyan/work --allow-root --NotebookApp.token=''
+
+# Volumes pour MongoDB
 volumes:
   mongo_data:
