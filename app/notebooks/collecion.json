@@ -1,0 +1,446 @@
+{
+  "info": {
+    "_postman_id": "whatsapp-groups-api",
+    "name": "WhatsApp Cloud API Groups",
+    "description": "Postman collection for Meta's WhatsApp Cloud API Groups endpoints. Set variables for authentication and IDs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "api_version",
+      "value": "v18.0",
+      "type": "string"
+    },
+    {
+      "key": "graph_url",
+      "value": "https://graph.facebook.com",
+      "type": "string"
+    },
+    {
+      "key": "business_phone_number_id",
+      "value": "YOUR_BUSINESS_PHONE_NUMBER_ID",
+      "type": "string"
+    },
+    {
+      "key": "group_id",
+      "value": "YOUR_GROUP_ID",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "YOUR_ACCESS_TOKEN",
+      "type": "string"
+    },
+    {
+      "key": "whatsapp_user_phone_number",
+      "value": "RECIPIENT_PHONE_NUMBER",
+      "type": "string"
+    },
+    {
+      "key": "template_name",
+      "value": "YOUR_TEMPLATE_NAME",
+      "type": "string"
+    },
+    {
+      "key": "template_language",
+      "value": "en",
+      "type": "string"
+    },
+    {
+      "key": "join_request_id",
+      "value": "YOUR_JOIN_REQUEST_ID",
+      "type": "string"
+    },
+    {
+      "key": "participant_user",
+      "value": "+1234567890",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Group",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\",\n  \"subject\": \"New Purchase Inquiry\",\n  \"description\": \"Group description\",\n  \"join_approval_mode\": \"auto_approve\"\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{business_phone_number_id}}/groups",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{business_phone_number_id}}",
+            "groups"
+          ]
+        },
+        "description": "Create a new group."
+      },
+      "response": []
+    },
+    {
+      "name": "List Join Requests",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}/join_requests",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}",
+            "join_requests"
+          ]
+        },
+        "description": "Get pending join requests."
+      },
+      "response": []
+    },
+    {
+      "name": "Approve Join Requests",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\",\n  \"join_requests\": [\"{{join_request_id}}\"]\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}/join_requests",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}",
+            "join_requests"
+          ]
+        },
+        "description": "Approve join requests."
+      },
+      "response": []
+    },
+    {
+      "name": "Reject Join Requests",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\",\n  \"join_requests\": [\"{{join_request_id}}\"]\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}/join_requests",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}",
+            "join_requests"
+          ]
+        },
+        "description": "Reject join requests."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Invite Link",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}/invite_link",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}",
+            "invite_link"
+          ]
+        },
+        "description": "Retrieve invite link."
+      },
+      "response": []
+    },
+    {
+      "name": "Reset Invite Link",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\"\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}/invite_link",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}",
+            "invite_link"
+          ]
+        },
+        "description": "Reset invite link."
+      },
+      "response": []
+    },
+    {
+      "name": "Send Group Invite Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{whatsapp_user_phone_number}}\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"{{template_name}}\",\n    \"language\": { \"code\": \"{{template_language}}\" },\n    \"components\": [\n      {\n        \"type\": \"body\",\n        \"parameters\": [\n          { \"type\": \"group_id\", \"group_id\": \"{{group_id}}\" }\n        ]\n      }\n    ]\n  }\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{business_phone_number_id}}/messages",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{business_phone_number_id}}",
+            "messages"
+          ]
+        },
+        "description": "Send invite via template message."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Group",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}"
+          ]
+        },
+        "description": "Delete the group."
+      },
+      "response": []
+    },
+    {
+      "name": "Remove Participants",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\",\n  \"participants\": [\n    { \"user\": \"{{participant_user}}\" }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}/participants",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}",
+            "participants"
+          ]
+        },
+        "description": "Remove participants from group."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Group Info",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}?fields=join_approval_mode,subject,description,suspended,creation_timestamp,participants,total_participant_count",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}"
+          ],
+          "query": [
+            {
+              "key": "fields",
+              "value": "join_approval_mode,subject,description,suspended,creation_timestamp,participants,total_participant_count"
+            }
+          ]
+        },
+        "description": "Retrieve group metadata."
+      },
+      "response": []
+    },
+    {
+      "name": "List Active Groups",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{business_phone_number_id}}/groups?limit=25",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{business_phone_number_id}}",
+            "groups"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "25"
+            }
+          ]
+        },
+        "description": "List active groups."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Group Settings",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"messaging_product\": \"whatsapp\",\n  \"subject\": \"Updated Subject\",\n  \"description\": \"Updated Description\"\n}"
+        },
+        "url": {
+          "raw": "{{graph_url}}/{{api_version}}/{{group_id}}",
+          "host": [
+            "{{graph_url}}"
+          ],
+          "path": [
+            "{{api_version}}",
+            "{{group_id}}"
+          ]
+        },
+        "description": "Update group subject, description, or profile picture."
+      },
+      "response": []
+    }
+  ]
+}

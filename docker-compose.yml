@@ -1,0 +1,70 @@
+services:
+  # MongoDB
+  mongo:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # Airflow
+  airflow:
+    build: ./airflow
+    container_name: airflow
+    restart: always
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+    ports:
+      - "8080:8080"
+    command: ["standalone"]
+    depends_on:
+      - mongo
+      - postgres
+
+
+  streamlit:
+    build: .
+    container_name: streamlit_app
+    depends_on:
+      - mongo
+      - airflow
+    ports:
+      - "8501:8501"
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      AIRFLOW_URL: http://airflow:8080
+
+  jupyter:
+    image: jupyter/pyspark-notebook:latest
+    container_name: jupyter_notebook
+    depends_on:
+      - mongo
+    ports:
+      - "8888:8888"
+    volumes:
+      - C:/Users/aamir/Desktop/YC/P/SmartLogisticsAI:/home/jovyan/work
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+    command: >
+      jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --notebook-dir=/home/jovyan/work --allow-root --NotebookApp.token=''
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  mongo_data:
+  pg_data:
