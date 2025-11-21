@@ -11,14 +11,12 @@ os.environ["HADOOP_HOME"] = HADOOP_PATH
 os.environ["hadoop.home.dir"] = HADOOP_PATH
 os.environ["PATH"] = os.path.join(HADOOP_PATH, "bin") + ";" + os.environ["PATH"]
 
-print("===== DEBUG INFO =====")
 print("HADOOP_HOME =", os.environ["HADOOP_HOME"])
 print("PATH =", os.environ["PATH"])
 
 winutils_path = os.path.join(HADOOP_PATH, "bin", "winutils.exe")
 print("winutils exists:", os.path.exists(winutils_path))
 print("winutils path:", winutils_path)
-print("======================")
 
 def start_streaming(spark):
     schema = StructType([

@@ -16,6 +16,7 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: SequentialExecutor
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
     volumes:
       - ./airflow/dags:/opt/airflow/dags
     ports:
@@ -23,31 +24,8 @@ services:
     command: ["standalone"]
     depends_on:
       - mongo
+      - postgres
 
-# docker-compose logs -f fastapi
-  fastapi:
-    build: ./fastapi
-    container_name: fastapi_app2
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./fastapi:/app
-    depends_on:
-      - mongo
-    command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
-
-  spark_gateway:
-    build: ./fastapi
-    container_name: spark_gateway
-    depends_on:
-      - mongo
-      - fastapi
-    volumes:
-      - ./fastapi:/app
-    environment:
-      - SOCKET_HOST=host.docker.internal
-      - SOCKET_PORT=9999
-    command: python /app/sparkGetWay.py
 
   streamlit:
     build: .
@@ -55,7 +33,6 @@ services:
     depends_on:
       - mongo
       - airflow
-      - fastapi
     ports:
       - "8501:8501"
     environment:
@@ -67,7 +44,6 @@ services:
     container_name: jupyter_notebook
     depends_on:
       - mongo
-      - fastapi
     ports:
       - "8888:8888"
     volumes:
@@ -77,5 +53,18 @@ services:
     command: >
       jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --notebook-dir=/home/jovyan/work --allow-root --NotebookApp.token=''
 
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
 volumes:
   mongo_data:
+  pg_data:
