@@ -20,5 +20,6 @@ async def websocket_endpoint(websocket: WebSocket):
             "Customer_City": random.choice(["New York", "Paris", "Berlin"]),
             "Order_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
+
         await websocket.send_text(json.dumps(data))
-        await asyncio.sleep(1) 
+        await asyncio.sleep(1)

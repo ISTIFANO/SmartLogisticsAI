@@ -1,5 +1,4 @@
-# Base Python image
-FROM python:3.10-slim
+FROM python:3.10-sli
 
 # Install Java for PySpark and utilities
 RUN apt-get update && \
@@ -26,5 +25,4 @@ RUN pip install jupyter pandas matplotlib seaborn pymongo
 # Expose Streamlit and Jupyter ports
 EXPOSE 8501 8888
 
-# Default command: run Streamlit (Jupyter command will override in docker-compose)
 CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]

@@ -24,34 +24,58 @@ services:
     depends_on:
       - mongo
 
-  # PySpark + Streamlit
+# docker-compose logs -f fastapi
+  fastapi:
+    build: ./fastapi
+    container_name: fastapi_app2
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./fastapi:/app
+    depends_on:
+      - mongo
+    command: uvicorn api:app --host 0.0.0.0 --port 8000 --reload
+
+  spark_gateway:
+    build: ./fastapi
+    container_name: spark_gateway
+    depends_on:
+      - mongo
+      - fastapi
+    volumes:
+      - ./fastapi:/app
+    environment:
+      - SOCKET_HOST=host.docker.internal
+      - SOCKET_PORT=9999
+    command: python /app/sparkGetWay.py
+
   streamlit:
     build: .
     container_name: streamlit_app
     depends_on:
       - mongo
       - airflow
+      - fastapi
     ports:
       - "8501:8501"
     environment:
       MONGO_URI: mongodb://mongo:27017
       AIRFLOW_URL: http://airflow:8080
 
-  # Jupyter Notebook
   jupyter:
     image: jupyter/pyspark-notebook:latest
     container_name: jupyter_notebook
     depends_on:
       - mongo
+      - fastapi
     ports:
       - "8888:8888"
     volumes:
-      - C:/Users/aamir/Desktop/YC/P/SmartLogisticsAI/app:/home/jovyan/work
+      - C:/Users/aamir/Desktop/YC/P/SmartLogisticsAI:/home/jovyan/work
     environment:
       MONGO_URI: mongodb://mongo:27017
     command: >
       jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --notebook-dir=/home/jovyan/work --allow-root --NotebookApp.token=''
 
-# Volumes pour MongoDB
 volumes:
   mongo_data:

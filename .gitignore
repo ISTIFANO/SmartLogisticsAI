@@ -1,4 +1,6 @@
 /app/data/
-
+/fastapi/hadoop
 /app/notebooks/SmartLogisticsAI_models
 /app/notebooks/.ipynb_checkpoints
+/fastapi/.ipynb_checkpoints
+/fastapi/__pycache__
