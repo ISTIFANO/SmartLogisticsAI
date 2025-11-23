@@ -4,3 +4,5 @@
 /app/notebooks/.ipynb_checkpoints
 /fastapi/.ipynb_checkpoints
 /fastapi/__pycache__
+
+/fastapi/sparkGetWayexc.py
